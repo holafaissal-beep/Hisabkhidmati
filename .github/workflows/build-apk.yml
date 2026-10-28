@@ -2,16 +2,12 @@ name: Build Hisab Khidmati APK
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/workflows/build-apk.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Get project
+      - name: Checkout project
         uses: actions/checkout@v4
 
       - name: Set up Java
@@ -20,17 +16,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          packages: ''
-
       - name: Build APK
-        run: |
-          chmod +x gradlew
-          ./gradlew assembleDebug
+        run: chmod +x gradlew && ./gradlew assembleDebug
 
-      - name: Save APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: HisabKhidmati-APK
