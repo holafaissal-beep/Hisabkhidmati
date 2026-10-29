@@ -1,3 +1,4 @@
+
 name: Build Hisab Khidmati APK
 
 on:
@@ -28,6 +29,15 @@ jobs:
 
       - name: Build APK
         run: gradle assembleDebug
+
+      - name: Verify APK
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          ls -lh "$APK"
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)
+          AAPT=$(find "$ANDROID_HOME/build-tools" -name aapt -type f | sort -V | tail -n 1)
+          "$AAPT" dump badging "$APK"
+          "$APKSIGNER" verify --verbose "$APK"
 
       - name: Save APK
         uses: actions/upload-artifact@v4
